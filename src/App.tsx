@@ -1,36 +1,20 @@
 import { useState } from "react";
+import Entrada from "./Entrada";
+import Saida from "./Saida";
+import Contexto from "./Contexto";
 
 export default function App() {
-  const [nome, setNome] = useState("");
   const [lista, setLista] = useState([] as string[]);
-
-
-  function add(){
-    const temp = [...lista,nome];
-    setLista(temp);
-  }
-
-  return (
-    <div>
-    <div>
-      <label>Nome</label>
-      <input value={nome} onChange={(e)=> setNome(e.target.value) } />
-      <button onClick={add}>Salvar</button>
-    </div>
-
-
-    {
-      lista.length>0 &&
-      <div>
-        <p>Quantidade : {lista.length} </p>
-        <ol>
-          {
-            lista.map((item,i) => <li key={i} >{item}</li>)
-          }
-        </ol>
-      </div>
+    
+  function add(nome:string){
+      const temp = [...lista,nome];
+      setLista(temp);
     }
 
-    </div>
+  return (
+    <Contexto.Provider value={{lista, add}} >
+      <Entrada />
+      <Saida  />
+    </Contexto.Provider>
   );
 }
