@@ -1,20 +1,57 @@
-import { useState } from "react";
-import Entrada from "./Entrada";
-import Saida from "./Saida";
-import Contexto from "./Contexto";
+import { createContext, useContext } from "react";
+import Lista from './Lista';
+const Contexto = createContext({} as ContextoProps);
 
 export default function App() {
-  const [lista, setLista] = useState([] as string[]);
-    
-  function add(nome:string){
-      const temp = [...lista,nome];
-      setLista(temp);
-    }
+  return (
+    <Provedor>
+      <A />
+      <Lista />
+    </Provedor>
+  );
+}
+
+function A(){
+  return(
+    <>
+      <p>A</p>
+      <B />
+    </>
+  );
+}
+
+function B(){
+  return(
+    <>
+      <p>B</p>
+      <C />
+    </>
+  );
+}
+function C(){
+  //const {nro} = useContext(Contexto);
+  const {nro} = useIsso();
+  return(
+    <>
+      <p>C {nro}</p>
+    </>
+  );
+}
+
+interface ContextoProps{
+  nro: number;
+}
+
+function Provedor({children}:any){
+  const nro = 20;
 
   return (
-    <Contexto.Provider value={{lista, add}} >
-      <Entrada />
-      <Saida  />
+    <Contexto.Provider value={{nro}}>
+      {children}
     </Contexto.Provider>
   );
+}
+
+function useIsso(){
+  return useContext(Contexto);
 }
