@@ -1,57 +1,46 @@
-import { createContext, useContext } from "react";
-import Lista from './Lista';
-const Contexto = createContext({} as ContextoProps);
+import axios from "axios";
+import { useState } from "react";
 
 export default function App() {
+  const [cep, setCep] = useState("12243750");
+  const [resposta, setResposta] = useState("");
+  const url = `https://viacep.com.br/ws/${cep}/json/`;
+  const [logradouro, setLogadouro] = useState("")
+  const obter = () => {
+    axios
+      .get(url)
+      //o conteúdo da resposta da requisição será colocada no objeto data,
+      //por este motivo fez-se a desestruturação
+      .then( r => {
+        console.log(r);
+        return r;
+      })
+      .then(({ data }) => {
+        setResposta(JSON.stringify(data));
+        setLogadouro(JSON.stringify(data.logradouro));
+      });
+  };
   return (
-    <Provedor>
-      <A />
-      <Lista />
-    </Provedor>
-  );
-}
-
-function A(){
-  return(
     <>
-      <p>A</p>
-      <B />
+      <label>Nome</label>
+      <input value={cep} onChange={(e) => setCep(e.target.value)} />
+      <button onClick={obter}>Buscar</button>
+      <div>{resposta}</div>
+      <div>Logradouro: {logradouro}</div>
     </>
   );
 }
 
-function B(){
-  return(
-    <>
-      <p>B</p>
-      <C />
-    </>
-  );
+function Manha() {
+  return <div>bom dia</div>;
 }
-function C(){
-  //const {nro} = useContext(Contexto);
-  const {nro} = useIsso();
-  return(
-    <>
-      <p>C {nro}</p>
-    </>
-  );
+function Tarde() {
+  return <div>boa tarde</div>;
 }
-
-interface ContextoProps{
-  nro: number;
+function Noite() {
+  return <div>boa noite</div>;
 }
-
-function Provedor({children}:any){
-  const nro = 20;
-
-  return (
-    <Contexto.Provider value={{nro}}>
-      {children}
-    </Contexto.Provider>
-  );
+function Erro() {
+  return <div>Rota inexistente</div>;
 }
-
-function useIsso(){
-  return useContext(Contexto);
-}
+  
