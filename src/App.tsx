@@ -1,33 +1,16 @@
-import axios from "axios";
-import { useState } from "react";
+import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 
 export default function App() {
-  const [cep, setCep] = useState("12243750");
-  const [resposta, setResposta] = useState("");
-  const url = `https://viacep.com.br/ws/${cep}/json/`;
-  const [logradouro, setLogadouro] = useState("")
-  const obter = () => {
-    axios
-      .get(url)
-      //o conteúdo da resposta da requisição será colocada no objeto data,
-      //por este motivo fez-se a desestruturação
-      .then( r => {
-        console.log(r);
-        return r;
-      })
-      .then(({ data }) => {
-        setResposta(JSON.stringify(data));
-        setLogadouro(JSON.stringify(data.logradouro));
-      });
-  };
   return (
-    <>
-      <label>Nome</label>
-      <input value={cep} onChange={(e) => setCep(e.target.value)} />
-      <button onClick={obter}>Buscar</button>
-      <div>{resposta}</div>
-      <div>Logradouro: {logradouro}</div>
-    </>
+    <BrowserRouter>
+      <Menu />
+      <Routes>
+        <Route path="*" element={<Erro />} />
+        <Route path="matutino" element={<Manha />} />
+        <Route path="vespertino" element={<Tarde />} />
+        <Route path="noturno" element={<Noite />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
@@ -43,4 +26,12 @@ function Noite() {
 function Erro() {
   return <div>Rota inexistente</div>;
 }
-  
+function Menu() {
+  return (
+    <div>
+      <Link to="matutino">Manhã</Link>
+      <Link to="vespertino">Tarde</Link>
+      <Link to="noturno">Noite</Link>
+    </div>
+  );
+}
